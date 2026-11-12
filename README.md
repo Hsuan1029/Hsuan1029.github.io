@@ -2,7 +2,7 @@
 
 I work on data analysis projects using Python, SQL and Power BI.
 
-[About me →](./about.md)
+[About me →](./about.html)
 
 ## Customer shopping behaviour
 
