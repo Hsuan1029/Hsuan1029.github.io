@@ -2,6 +2,8 @@
 
 I work on data analysis and engineering projects using Python, SQL and Power BI.
 
+[About me →](./about.html)
+
 ## Customer shopping behaviour
 
 How does shopping behaviour differ between subscribers and non-subscribers?
