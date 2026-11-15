@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0f0f10">
+    <title>Acrylamide synthesis ETL pipeline | Eileen Chang</title>
+    <meta name="description" content="A data engineering project on acrylamide synthesis, with research context on solvent selection and reaction kinetics.">
+    <link rel="stylesheet" href="../style.css">
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header>
+      <div class="bar">
+        <a class="brand" href="../index.html">Eileen Chang<span>.</span></a>
+        <nav aria-label="Main navigation">
+          <a href="../index.html#about">About</a>
+          <a href="../index.html#work">Projects</a>
+          <a class="github" href="https://github.com/Hsuan1029">GitHub ↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="reader wrap" id="main">
+      <a class="back" href="../index.html#work">← Selected projects</a>
+      <p class="label">Chemical engineering / Data engineering</p>
+      <h1>Acrylamide synthesis ETL pipeline</h1>
+      <a class="line" href="https://github.com/Hsuan1029/Acrylamide_Synthesis_ETL_Pipeline/tree/main">
+        Repository on GitHub ↗
+      </a>
+
+      <article>
+        <h2>From synthesis data to analysis</h2>
+        <p>
+          How do you turn records about a chemical synthesis into data you can
+          compare? This project explores that question through an
+          extract, transform and load (ETL) pipeline for acrylamide synthesis.
+        </p>
+
+        <h2>How to read the pipeline</h2>
+        <ol>
+          <li><strong>Extract.</strong> Identify the source records and what each observation represents.</li>
+          <li><strong>Transform.</strong> Put comparable observations into a consistent form. For example, two temperatures can only be compared directly once they share a scale.</li>
+          <li><strong>Load.</strong> Write the prepared records to their destination so they can be queried or analysed together.</li>
+        </ol>
+        <!-- Add verified input files, transformation rules and an example output here. -->
+
+        <h2>Research context</h2>
+        <p>
+          In my related presentation on solvent design, I explore how researchers
+          select a solvent to accelerate a reaction. The study compares reaction
+          rate constants at 298 K and uses melting and boiling points to constrain
+          the search. That distinction matters when reading a dataset: the rate
+          constant is the quantity being compared, while temperature is a condition
+          of the comparison.
+        </p>
+        <a class="line" href="../assets/molecular-design.pdf">
+          Read the solvent design presentation (PDF) ↗
+        </a>
+      </article>
+    </main>
+  </body>
+</html>
