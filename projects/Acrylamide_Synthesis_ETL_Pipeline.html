@@ -4,9 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#0f0f10">
-    <title>Acrylamide synthesis ETL pipeline | Eileen Chang</title>
-    <meta name="description" content="A data engineering project on acrylamide synthesis, with research context on solvent selection and reaction kinetics.">
+    <title>Acrylamide synthesis by the numbers | Eileen Chang</title>
+    <meta name="description" content="Explore reagent and solvent mentions in Reaxys records of acrylamide synthesis from 2000 to 2025.">
     <link rel="stylesheet" href="../style.css">
+    <style>
+      .reader td, .reader li { overflow-wrap: anywhere; }
+      .reader pre { overflow-x: auto; }
+      .counts tr > :last-child { text-align: right; font-variant-numeric: tabular-nums; }
+    </style>
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
@@ -25,39 +30,109 @@
     <main class="reader wrap" id="main">
       <a class="back" href="../index.html#work">← Selected projects</a>
       <p class="label">Chemical engineering / Data engineering</p>
-      <h1>Acrylamide synthesis ETL pipeline</h1>
-      <a class="line" href="https://github.com/Hsuan1029/Acrylamide_Synthesis_ETL_Pipeline/tree/main">
-        Repository on GitHub ↗
-      </a>
-
+      <h1>🧪 Acrylamide synthesis by the numbers</h1>
       <article>
-        <h2>From synthesis data to analysis</h2>
-        <p>
-          How do you turn records about a chemical synthesis into data you can
-          compare? This project explores that question through an
-          extract, transform and load (ETL) pipeline for acrylamide synthesis.
-        </p>
-
-        <h2>How to read the pipeline</h2>
+        <p>What changes when you call the same chemical by two different names? In a spreadsheet, it can end up competing with itself. This Python notebook tackles that problem before counting which reagents and solvents appear most often in Reaxys records of acrylamide synthesis from 2000 to 2025.</p>
+        <a class="line" href="https://github.com/Hsuan1029/Acrylamide_Synthesis_ETL_Pipeline/blob/main/Acrylamide_Synthesis_ETL_Pipeline.ipynb">Open the notebook and explore the charts →</a>
+        <p>The charts are saved in the notebook, so you can browse the results on GitHub without running any code.</p>
+        <h2>From 12,155 records to two reactant groups</h2>
+        <p>The dataset covers journal articles and patents. The notebook splits chemical lists into individual entries, keeps records with two listed reactants, and standardises names. For example, it groups “acrylic acid chloride” with “acryloyl chloride” so both names count towards the same group.</p>
+        <table class="counts">
+          <thead>
+            <tr>
+              <th scope="col">Checkpoint</th>
+              <th scope="col">Rows in the saved run</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Original Reaxys export</td>
+              <td>12,155</td>
+            </tr>
+            <tr>
+              <td>After filtering and cleaning</td>
+              <td>11,625</td>
+            </tr>
+            <tr>
+              <td>Distinct rows after removing exact duplicates</td>
+              <td>9,093</td>
+            </tr>
+            <tr>
+              <td>Distinct rows mentioning acrylic acid as a reactant</td>
+              <td>824</td>
+            </tr>
+            <tr>
+              <td>Distinct rows mentioning acryloyl chloride as a reactant</td>
+              <td>7,194</td>
+            </tr>
+          </tbody>
+        </table>
+        <h2>📊 What to look for</h2>
+        <p>Scroll to the <strong>last three code cells</strong> for the acrylic acid analysis. Start with the bars to see which chemicals appear most often, then compare the lines to see when they appeared.</p>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Question</th>
+              <th scope="col">Years</th>
+              <th scope="col">What the notebook shows</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Which coupling reagents appear most often?</td>
+              <td>2000–2025</td>
+              <td>Totals for the top eight and yearly counts for the top seven</td>
+            </tr>
+            <tr>
+              <td>Which bases appear most often?</td>
+              <td>2010–2023</td>
+              <td>Totals and yearly counts for the top seven</td>
+            </tr>
+            <tr>
+              <td>Which solvents appear most often?</td>
+              <td>2010–2023</td>
+              <td>Totals and yearly counts for the top ten</td>
+            </tr>
+          </tbody>
+        </table>
+        <p><strong>Reading the counts.</strong> The charts count mentions in the filtered records. A record can list several chemicals, and the plotting cells retain duplicate rows. The 824-row figure above counts distinct rows. The chart totals therefore answer a different question from the subset summary.</p>
+        <h2>Run it yourself</h2>
         <ol>
-          <li><strong>Extract.</strong> Identify the source records and what each observation represents.</li>
-          <li><strong>Transform.</strong> Put comparable observations into a consistent form. For example, two temperatures can only be compared directly once they share a scale.</li>
-          <li><strong>Load.</strong> Write the prepared records to their destination so they can be queried or analysed together.</li>
+          <li>
+            <p>Place the notebook and both input files in the same folder. The filenames are case-sensitive.</p>
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Input file</th>
+                  <th scope="col">What it contains</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>reaction_data_2000_2025.csv</code></td>
+                  <td>Reaxys export with the original column names, including <code>Year</code>, <code>Reactant</code>, <code>Reagent</code> and <code>Solvent (Reaction Details)</code></td>
+                </tr>
+                <tr>
+                  <td><code>Solvent_List.txt</code></td>
+                  <td>Tab-separated lookup file with a header row, solvent name in the first column and preferred IUPAC name in the second</td>
+                </tr>
+              </tbody>
+            </table>
+          </li>
+          <li>
+            <p>In a Python environment, open a terminal in that folder and run these commands.</p>
+            <pre><code>python -m pip install jupyterlab pandas matplotlib numpy pubchempy
+python -m jupyterlab Acrylamide_Synthesis_ETL_Pipeline.ipynb</code></pre>
+          </li>
+          <li>
+            <p>In JupyterLab, choose <strong>Run → Run All Cells</strong>. The notebook displays the charts inline and writes two files in the working folder.</p>
+            <ul>
+              <li><code>cleaned_dataset.csv</code> contains the filtered records with standardised names and classified reagent columns.</li>
+              <li><code>coupling_reagent_bar_plot_data.csv</code> contains the data behind the top-eight coupling reagent chart.</li>
+            </ul>
+          </li>
         </ol>
-        <!-- Add verified input files, transformation rules and an example output here. -->
-
-        <h2>Research context</h2>
-        <p>
-          In my related presentation on solvent design, I explore how researchers
-          select a solvent to accelerate a reaction. The study compares reaction
-          rate constants at 298 K and uses melting and boiling points to constrain
-          the search. That distinction matters when reading a dataset: the rate
-          constant is the quantity being compared, while temperature is a condition
-          of the comparison.
-        </p>
-        <a class="line" href="../assets/molecular-design.pdf">
-          Read the solvent design presentation (PDF) ↗
-        </a>
+        <p>Running the notebook again overwrites these two CSV files.</p>
       </article>
     </main>
   </body>
