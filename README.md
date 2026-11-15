@@ -1,13 +1,7 @@
-# Eileen Chang
+# Eileen Chang's portfolio
 
-I work on data analysis projects using Python, SQL and Power BI.
+Extract the ZIP and upload its contents to the root of Hsuan1029.github.io. Keep index.html beside style.css and site.js. Upload the assets and projects folders with their contents. Commit the files to the branch served by GitHub Pages. For branch-based publishing, choose Settings → Pages → Deploy from a branch, select the branch and /(root), then Save.
 
-## Customer shopping behaviour
+The site uses plain HTML, CSS and JavaScript. Each project page contains a snapshot of its repository README, with locally stored illustrations. Update the corresponding HTML page when a README changes. Links to notebooks and code open the original repository.
 
-How does shopping behaviour differ between subscribers and non-subscribers?
-I used Python to clean the retail data, PostgreSQL to analyse customer
-segments, and Power BI to visualise the results.
-
-[View slides (PDF)](Computer-aided_Molecular_Design.pdf) ·
-[Read the technical report](statistic_PCA_Data_Science.pdf) ·
-[Explore the code on GitHub](https://github.com/Hsuan1029/Business-Analysis)
+The About section loads YouTube when a visitor presses play. The slide viewer, PDF and downloadable image-based PowerPoint all reproduce the 31 slides in the molecular-design presentation from the original portfolio. For selectable text, use the PDF.

@@ -1,0 +1,114 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0f0f10"><title>Nanocluster data analysis | Eileen Chang</title><meta name="description" content="Eileen Chang’s portfolio in chemical engineering and data analysis."><link rel="stylesheet" href="../style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><div class="bar"><a class="brand" href="../index.html">Eileen Chang<span>.</span></a><nav aria-label="Main navigation"><a href="../index.html#about">About</a><a href="../index.html#work">Projects</a><a class="github" href="https://github.com/Hsuan1029">GitHub ↗</a></nav></div></header><main class="reader wrap" id="main"><a class="back" href="../index.html#work">← Selected projects</a><p class="label">Materials science</p><h1>Nanocluster data analysis</h1><a class="line" href="https://github.com/Hsuan1029/Nanocluster_Data_Analysis">Repository on GitHub ↗</a><article><h2 id="nanocluster-data-analysis">Nanocluster Data Analysis</h2>
+<p>How do nanoclusters of different elements compare when their energy
+and electronic properties are considered together? This project uses
+principal component analysis (PCA) to map structures from the Quantum
+Cluster Database onto two shared axes. The original analysis began with
+63,015 structures across 55 elements and retained 60,553 after removing
+incomplete records.</p>
+<h3 id="a-map-of-nanocluster-properties">A map of nanocluster
+properties</h3>
+<p><img
+src="../assets/Nanocluster_Data_Analysis/images/all-elements.png"
+alt="PCA of all elements with marker size proportional to atom count" /></p>
+<p>Each point represents one calculated structure. Colour identifies its
+element, and larger markers represent clusters with more atoms. The
+black arrows show the directions in which the original properties
+increase. Atom count was held out of the model so its relationship with
+the PCA scores could be inspected visually.</p>
+<p><strong>PC1 explains 43.5% of the variance and PC2 explains
+24.8%.</strong> Relative energy and the two neighbouring-size energy
+measures point strongly along PC1. Magnetic moment and valence electron
+count point upward on PC2, while the HOMO–LUMO gap points downward.
+Together the two axes capture 68.3% of the variation in the seven
+standardised properties. Distances in this view describe similarity in
+those properties. They do not establish a ranking of experimental
+stability.</p>
+<p><img src="../assets/Nanocluster_Data_Analysis/images/scree.png"
+alt="Scree plot of the six retained components, with variance explained labelled above each bar" /></p>
+<h3 id="comparing-element-families">Comparing element families</h3>
+<p>All panels use scores from the same fitted model. Their axis limits
+differ, so compare the tick values when judging the spread. The alkaline
+earth metals occupy a narrow band along PC1, while the metalloid
+structures span a wider range of energy profiles.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Alkali metals</th>
+<th>Alkaline earth metals</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><img
+src="../assets/Nanocluster_Data_Analysis/images/alkali-metals.png"
+alt="Alkali metal PCA biplot" /></td>
+<td><img
+src="../assets/Nanocluster_Data_Analysis/images/alkaline-earth-metals.png"
+alt="Alkaline earth metal PCA biplot" /></td>
+</tr>
+<tr class="even">
+<td><strong>Post-transition metals</strong></td>
+<td><strong>Metalloids</strong></td>
+</tr>
+<tr class="odd">
+<td><img
+src="../assets/Nanocluster_Data_Analysis/images/post-transition-metals.png"
+alt="Post-transition metal PCA biplot" /></td>
+<td><img src="../assets/Nanocluster_Data_Analysis/images/metalloids.png"
+alt="Metalloid PCA biplot" /></td>
+</tr>
+<tr class="even">
+<td><strong>Nonmetals</strong></td>
+<td><strong>Transition metals, detail</strong></td>
+</tr>
+<tr class="odd">
+<td><img src="../assets/Nanocluster_Data_Analysis/images/nonmetals.png"
+alt="Nonmetal PCA biplot" /></td>
+<td><img
+src="../assets/Nanocluster_Data_Analysis/images/transition-metals.png"
+alt="Zoomed view of the transition metal scores" /></td>
+</tr>
+</tbody>
+</table>
+<h4 id="why-yttrium-stands-out">Why yttrium stands out</h4>
+<p><img
+src="../assets/Nanocluster_Data_Analysis/images/transition-metals-by-size.png"
+alt="Size-encoded PCA scores for nickel, scandium and yttrium showing an extended yttrium branch" /></p>
+<p>The zoomed transition-metal panel shows a dense band near PC1 = 0. On
+the wider axis above, a subset of yttrium (Y) structures forms a
+separate diagonal branch, extending well beyond nickel (Ni) and scandium
+(Sc). The original report flagged Y clusters of roughly 10–20 atoms for
+closer inspection. Comparing their geometries with other Y structures of
+the same size would help investigate the pattern.</p>
+<h3 id="run-the-analysis">Run the analysis</h3>
+<p>Download <strong>data.csv</strong> from the <a
+href="https://muellergroup.jhu.edu/qcd/">Quantum Cluster Database</a>.
+From the repository root, run the following commands in a terminal. The
+original coursework used the filename <code>Nanoclusterdata.csv</code>.
+Either filename works when passed as the argument.</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> venv .venv</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pip install pandas numpy matplotlib scikit-learn seaborn</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> nanocluster_analysis.py data.csv <span class="at">--output</span> results</span></code></pre></div>
+<p>The script fits six components after standardising seven CSV columns:
+<code>energy_n_minus_one</code>, <code>energy_n_plus_one</code>,
+<code>homo_lumo_gap</code>, <code>n_val_electrons</code>,
+<code>magnetic_moment</code>, <code>energy_dft</code> and
+<code>energy_relative</code>. It also reads <code>element_symbol</code>
+and <code>n_atoms</code> for plotting. Rows with missing values in these
+nine fields are excluded. The terminal reports the retained row count
+and the variance explained by PC1 and PC2 for the supplied CSV.</p>
+<p>The figures in <code>images/</code> are the original report figures.
+The command above writes fresh PNGs to <code>results/</code>. To refresh
+the figures embedded in this README, use <code>--output images</code>.
+Regenerated charts use Matplotlib and can differ in styling. Add
+<code>--eda</code> to also generate property distributions, element
+counts, DFT-energy violin plots, a correlation heatmap and a scatter
+matrix.</p>
+<h3 id="data-reference">Data reference</h3>
+<p>Manna, S. et al. (2023). <em>A database of low-energy atomically
+precise nanoclusters</em>. Scientific Data, 10, 308. <a
+href="https://doi.org/10.1038/s41597-023-02200-4">Read the
+paper</a>.</p>
+</article></main><footer><div class="bar"><span>Eileen Chang</span><div><a href="https://www.linkedin.com/in/hsuan1029/">LinkedIn ↗</a>　<a href="https://github.com/Hsuan1029">GitHub ↗</a></div></div></footer></body></html>

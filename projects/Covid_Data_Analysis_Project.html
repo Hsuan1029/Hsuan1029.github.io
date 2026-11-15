@@ -1,0 +1,105 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0f0f10"><title>COVID-19 in SQL | Eileen Chang</title><meta name="description" content="Eileen Chang’s portfolio in chemical engineering and data analysis."><link rel="stylesheet" href="../style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><div class="bar"><a class="brand" href="../index.html">Eileen Chang<span>.</span></a><nav aria-label="Main navigation"><a href="../index.html#about">About</a><a href="../index.html#work">Projects</a><a class="github" href="https://github.com/Hsuan1029">GitHub ↗</a></nav></div></header><main class="reader wrap" id="main"><a class="back" href="../index.html#work">← Selected projects</a><p class="label">Public health</p><h1>COVID-19 in SQL</h1><a class="line" href="https://github.com/Hsuan1029/Covid_Data_Analysis_Project">Repository on GitHub ↗</a><article><h2 id="covid-19-data-analysis-with-sql">COVID-19 data analysis with
+SQL</h2>
+<p>How did reported COVID-19 cases and deaths change in the UK, and how
+did vaccine rollout vary across countries? This project uses SQLite
+queries in a Python notebook to explore daily records from <strong>1
+January 2020 to 30 April 2021</strong>. Each source CSV contains 85,171
+rows and includes both individual locations and regional aggregates.</p>
+<p><a
+href="https://github.com/Hsuan1029/Covid_Data_Analysis_Project/blob/main/covid_analysis.ipynb">Explore
+the analysis notebook</a></p>
+<h3 id="a-finding-from-the-uk-analysis">A finding from the UK
+analysis</h3>
+<p>By 30 April 2021, the UK had recorded <strong>4,432,246 cases and
+127,775 deaths</strong>. Reported deaths amounted to <strong>2.88% of
+reported cases</strong> at that point. This ratio depends on which
+infections were detected and on the delay between a case and a
+death.</p>
+<h3 id="what-the-notebook-explores">What the notebook explores</h3>
+<ul>
+<li><strong>UK trends.</strong> Calculate reported deaths as a
+percentage of reported cases, and reported cases as a share of the
+population.</li>
+<li><strong>Geographic comparisons.</strong> Rank locations by reported
+cases relative to population and compare cumulative death counts. The
+continent query takes the highest country death count within each
+continent. A continent-wide total would require summing country counts
+for a common date.</li>
+<li><strong>Global trends.</strong> Aggregate new cases and deaths by
+day, excluding rows that already represent geographic totals.</li>
+<li><strong>Vaccination rollout.</strong> Join the two datasets by
+location and date. Use a window function to accumulate reported daily
+doses within each location, then save the query as a reusable SQLite
+view.</li>
+</ul>
+<h3 id="repository-files">Repository files</h3>
+<table>
+<thead>
+<tr class="header">
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a
+href="https://github.com/Hsuan1029/Covid_Data_Analysis_Project/blob/main/covid_analysis.ipynb">covid_analysis.ipynb</a></td>
+<td>SQL analysis, query results and Python code for loading the
+data</td>
+</tr>
+<tr class="even">
+<td><a
+href="https://github.com/Hsuan1029/Covid_Data_Analysis_Project/blob/main/CovidDeaths.csv">CovidDeaths.csv</a></td>
+<td>Daily case and death records with population figures</td>
+</tr>
+<tr class="odd">
+<td><a
+href="https://github.com/Hsuan1029/Covid_Data_Analysis_Project/blob/main/CovidVaccinations.csv">CovidVaccinations.csv</a></td>
+<td>Daily vaccination records and related indicators</td>
+</tr>
+<tr class="even">
+<td><a
+href="https://github.com/Hsuan1029/Covid_Data_Analysis_Project/blob/main/covid.db">covid.db</a></td>
+<td>SQLite database with both source tables and the saved vaccination
+queries</td>
+</tr>
+</tbody>
+</table>
+<h3 id="run-in-github-codespaces">Run in GitHub Codespaces</h3>
+<ol type="1">
+<li><p>Open this repository in a Codespace. From the repository root,
+run the following in the terminal:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> venv .venv</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pip install pandas ipykernel</span></code></pre></div></li>
+<li><p>Open <code>covid_analysis.ipynb</code>, choose <strong>Select
+Kernel</strong>, and select the Python interpreter in
+<code>.venv</code>.</p></li>
+<li><p>Run the cells from top to bottom. The first cell rebuilds the two
+source tables from the CSVs. To explore the included database directly,
+start at the second cell, which opens <code>covid.db</code>.</p></li>
+</ol>
+<h3 id="use-the-vaccination-data-in-tableau">Use the vaccination data in
+Tableau</h3>
+<p>The <code>vaccination_trends</code> view handles the CSVs’
+day/month/year dates in chronological order. Use this view for
+time-series charts. Some earlier practice queries sort the original date
+strings alphabetically.</p>
+<p>To export the view, run this in a notebook cell after opening the
+database:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>trends <span class="op">=</span> pd.read_sql_query(<span class="st">&quot;SELECT * FROM vaccination_trends&quot;</span>, db)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>trends[<span class="st">&quot;date&quot;</span>] <span class="op">=</span> pd.to_datetime(trends[<span class="st">&quot;date&quot;</span>], <span class="bu">format</span><span class="op">=</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">/%m/%Y&quot;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>trends.to_csv(<span class="st">&quot;vaccination_trends.csv&quot;</span>, index<span class="op">=</span><span class="va">False</span>, date_format<span class="op">=</span><span class="st">&quot;%Y-%m-</span><span class="sc">%d</span><span class="st">&quot;</span>)</span></code></pre></div>
+<p>Download the resulting CSV and open it in Tableau as a <strong>Text
+File</strong>. For a UK rollout chart, filter <code>location</code> to
+<code>United Kingdom</code>, place <code>date</code> on Columns and
+<code>rolling_doses</code> on Rows. Use the daily date level. The view
+accumulates doses on days with a reported value, and an individual can
+contribute more than one dose.</p>
+<h3 id="acknowledgements">Acknowledgements</h3>
+<p>Adapted from Alex The Analyst’s <a
+href="https://www.youtube.com/watch?v=qfyynHBFOsM">SQL Data Exploration
+portfolio tutorial</a> for SQLite and Jupyter.</p>
+</article></main><footer><div class="bar"><span>Eileen Chang</span><div><a href="https://www.linkedin.com/in/hsuan1029/">LinkedIn ↗</a>　<a href="https://github.com/Hsuan1029">GitHub ↗</a></div></div></footer></body></html>

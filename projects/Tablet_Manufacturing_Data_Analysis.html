@@ -1,0 +1,185 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0f0f10"><title>Inside the tablet press | Eileen Chang</title><meta name="description" content="Eileen Chang’s portfolio in chemical engineering and data analysis."><link rel="stylesheet" href="../style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><div class="bar"><a class="brand" href="../index.html">Eileen Chang<span>.</span></a><nav aria-label="Main navigation"><a href="../index.html#about">About</a><a href="../index.html#work">Projects</a><a class="github" href="https://github.com/Hsuan1029">GitHub ↗</a></nav></div></header><main class="reader wrap" id="main"><a class="back" href="../index.html#work">← Selected projects</a><p class="label">Digital manufacturing</p><h1>Inside the tablet press</h1><a class="line" href="https://github.com/Hsuan1029/Tablet_Manufacturing_Data_Analysis">Repository on GitHub ↗</a><article><h2 id="nanocluster-data-analysis">Nanocluster Data Analysis</h2>
+<h3 id="tablet-press-operating-conditions-production-and-waste">Tablet
+press operating conditions, production and waste</h3>
+<p>Which tablet press settings are worth testing in a follow-up
+experiment? This project uses principal component analysis (PCA) to
+explore ten sensor measurements from pharmaceutical tablet
+manufacturing. The first two components captured <strong>64.5%</strong>
+of the reported variation in the process measurements. Colouring the
+same observations by production and waste counts reveals a trade-off
+worth investigating.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Tablet production</th>
+<th>Tablet waste</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><img
+src="../assets/Tablet_Manufacturing_Data_Analysis/images/scores-produced.png"
+alt="PC1 and PC2 scores coloured by tablets produced" /></td>
+<td><img
+src="../assets/Tablet_Manufacturing_Data_Analysis/images/scores-waste.png"
+alt="The same PC1 and PC2 scores coloured by tablets rejected" /></td>
+</tr>
+</tbody>
+</table>
+<p>Higher production counts occur in parts of the negative-PC1 region,
+where some observations also show elevated waste. The colour scales
+represent counts. Comparing rejection rates across operating conditions
+would also require accounting for production volume.</p>
+<h3 id="preparing-the-measurements">Preparing the measurements</h3>
+<ol type="1">
+<li><strong>Remove identifiers.</strong> Drop the timestamp, campaign,
+batch and code before comparing sensor measurements. Keep the production
+and waste counts alongside each observation for colouring the score
+plots.</li>
+<li><strong>Check completeness and duplicates.</strong> Drop rows with
+missing values in the retained columns and check for repeated
+measurement records. The report describes 40 incomplete records and no
+duplicates. Its summary tables give approximately 107,000 observations
+before processing and 81,700 afterwards. The stated cleaning steps do
+not fully explain that difference. The script prints the number of rows
+removed at each step so it can be checked against the input CSV.</li>
+<li><strong>Inspect extreme readings.</strong> Use boxplots and scatter
+matrices to examine the sensor distributions. Retain values beyond the
+boxplot whiskers because they may represent genuine changes in operating
+conditions.</li>
+<li><strong>Standardise ten process variables.</strong> Apply z-score
+scaling so differences in measurement units do not dominate the PCA. Fit
+the model using only those measurements, then pair its scores with the
+observed outcomes.</li>
+</ol>
+<table>
+<thead>
+<tr class="header">
+<th>Before standardisation</th>
+<th>After standardisation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><img
+src="../assets/Tablet_Manufacturing_Data_Analysis/images/boxplots-before.png"
+alt="Boxplots of eight tablet press measurements in their original units" /></td>
+<td><img
+src="../assets/Tablet_Manufacturing_Data_Analysis/images/boxplots-standardised.png"
+alt="Boxplots of the same eight measurements after z-score scaling" /></td>
+</tr>
+<tr class="even">
+<td><img
+src="../assets/Tablet_Manufacturing_Data_Analysis/images/scatter-before.png"
+alt="Scatter matrix of press speed, filling device speed, compression force and fill depth" /></td>
+<td><img
+src="../assets/Tablet_Manufacturing_Data_Analysis/images/scatter-standardised.png"
+alt="Scatter matrix of the same four standardised features" /></td>
+</tr>
+</tbody>
+</table>
+<h3 id="interpreting-the-components">Interpreting the components</h3>
+<p><img
+src="../assets/Tablet_Manufacturing_Data_Analysis/images/scree.png"
+alt="Scree plot showing variance explained by nine principal components" /></p>
+<p>PC1 explained <strong>38.3%</strong> of the variance and PC2
+explained <strong>26.2%</strong>. PC3 added <strong>12.3%</strong>,
+bringing the total to <strong>76.8%</strong>. These percentages describe
+variation in the sensors. Production and waste were held out of the PCA
+fit.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Feature weights across PC1, PC2 and PC3</th>
+<th>Feature directions in the PC1–PC2 plane</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><img
+src="../assets/Tablet_Manufacturing_Data_Analysis/images/loadings.png"
+alt="Line plots of feature loadings for the first three components" /></td>
+<td><img
+src="../assets/Tablet_Manufacturing_Data_Analysis/images/loading-vectors.png"
+alt="Arrows showing the PC1 and PC2 loadings of each process variable" /></td>
+</tr>
+</tbody>
+</table>
+<p>In the reported orientation, filling device speed (<code>fom</code>)
+and main compression force (<code>main_comp</code>) have negative PC1
+weights. Pre-compression height (<code>cyl_pre</code>) also points
+towards the negative-PC1, negative-PC2 region. The report shortlists
+these three variables and ejection force for a designed experiment to
+test their relationship with production and waste.</p>
+<p><img
+src="../assets/Tablet_Manufacturing_Data_Analysis/images/scores-pc3-produced.png"
+alt="PC1 and PC3 scores coloured by tablet production, with a detail view" /></p>
+<p>The third component brings compression-force variability
+(<code>SREL</code>) into view. It has a positive PC3 loading, while many
+observations with higher production counts lie towards negative PC3. The
+dashed ellipses in the score plots give a covariance-based 95% reference
+contour.</p>
+<h3 id="run-the-analysis">Run the analysis</h3>
+<p>Use Python 3 and the original semicolon-delimited course dataset,
+<code>ceng0068project.csv</code>. The dataset is separate from this
+repository. From the repository directory, run:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pip install pandas numpy matplotlib scipy scikit-learn</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> pca_analysis.py /path/to/ceng0068project.csv <span class="at">--output</span> outputs</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th>Appendix</th>
+<th>File</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A</td>
+<td><a
+href="https://github.com/Hsuan1029/Tablet_Manufacturing_Data_Analysis/blob/main/cleaning.py">cleaning.py</a></td>
+<td>Reads the CSV, reports missing and duplicate rows, and plots
+distributions in the original units.</td>
+</tr>
+<tr class="even">
+<td>B</td>
+<td><a
+href="https://github.com/Hsuan1029/Tablet_Manufacturing_Data_Analysis/blob/main/standardisation.py">standardisation.py</a></td>
+<td>Selects the ten sensor features and scales them to unit
+variance.</td>
+</tr>
+<tr class="odd">
+<td>C</td>
+<td><a
+href="https://github.com/Hsuan1029/Tablet_Manufacturing_Data_Analysis/blob/main/visualisation.py">visualisation.py</a></td>
+<td>Repeats the distribution plots on the standardised
+measurements.</td>
+</tr>
+<tr class="even">
+<td>D</td>
+<td><a
+href="https://github.com/Hsuan1029/Tablet_Manufacturing_Data_Analysis/blob/main/pca_analysis.py">pca_analysis.py</a></td>
+<td>Runs all four stages, fits nine components, and exports the scree,
+loading and score plots.</td>
+</tr>
+</tbody>
+</table>
+<p>The CSV must contain <code>timestamp</code>, <code>campaign</code>,
+<code>batch</code>, <code>code</code>, the outcomes
+<code>produced</code> and <code>waste</code>, and the sensor columns
+<code>tbl_speed</code>, <code>fom</code>, <code>main_comp</code>,
+<code>tbl_fill</code>, <code>SREL</code>, <code>pre_comp</code>,
+<code>cyl_main</code>, <code>cyl_pre</code>, <code>stiffness</code> and
+<code>ejection</code>.</p>
+<p>The ten PNGs in <a
+href="https://github.com/Hsuan1029/Tablet_Manufacturing_Data_Analysis/tree/main/images/">images</a>
+are the original report panels. The scripts export fresh plots to the
+output directory with the same filenames. The original score plots
+include hand-added annotations and a detail view. Reruns draw the scores
+and reference ellipses directly from the supplied data.</p>
+<p><strong>Dataset background</strong> · Žagar and Mihelič (2022), <a
+href="https://doi.org/10.1038/s41597-022-01203-x">Big data collection in
+pharmaceutical manufacturing and its use for product quality
+predictions</a>.</p>
+</article></main><footer><div class="bar"><span>Eileen Chang</span><div><a href="https://www.linkedin.com/in/hsuan1029/">LinkedIn ↗</a>　<a href="https://github.com/Hsuan1029">GitHub ↗</a></div></div></footer></body></html>
